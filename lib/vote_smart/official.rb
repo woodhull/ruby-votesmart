@@ -38,6 +38,8 @@ module VoteSmart
     
     def self.find_by_office_id_and_state_id office_id, state_id
       response = response_child(get_by_office_state(office_id, state_id), "candidateList", "candidate")
+      # sometimes PVS sends back an array with the same Official appearing twice. 
+      response = response.first if response.is_a?(Array)
       official = Official.new(response) unless response.empty?
       official.office_id = office_id if official
       official.state_id ||= state_id if official
